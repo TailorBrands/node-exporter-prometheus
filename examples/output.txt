@@ -1,0 +1,92 @@
+# HELP node_http_duration_seconds Duration of HTTP requests in seconds
+# TYPE node_http_duration_seconds summary
+node_http_duration_seconds{quantile="0.01",app_name="test-app"} 0.00059916
+node_http_duration_seconds{quantile="0.1",app_name="test-app"} 0.00059916
+node_http_duration_seconds{quantile="0.9",app_name="test-app"} 0.007044061
+node_http_duration_seconds{quantile="0.99",app_name="test-app"} 0.007044061
+node_http_duration_seconds_sum{app_name="test-app"} 0.0076432209999999995
+node_http_duration_seconds_count{app_name="test-app"} 2
+
+# HELP node_http_requests_total Response status codes
+# TYPE node_http_requests_total counter
+node_http_requests_total{method="GET",path="/home",status="200",app_name="test-app"} 1
+node_http_requests_total{method="GET",path="/non_existant_route",status="404",app_name="test-app"} 1
+node_http_requests_total{method="GET",path="/favicon.ico",status="404",app_name="test-app"} 1
+
+# HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
+# TYPE process_cpu_user_seconds_total counter
+process_cpu_user_seconds_total{app_name="test-app"} 0.161275 1542837854489
+
+# HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
+# TYPE process_cpu_system_seconds_total counter
+process_cpu_system_seconds_total{app_name="test-app"} 0.016537 1542837854489
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total{app_name="test-app"} 0.177812 1542837854489
+
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds{app_name="test-app"} 1542837834
+
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes{app_name="test-app"} 50683904 1542837854489
+
+# HELP nodejs_eventloop_lag_seconds Lag of event loop in seconds.
+# TYPE nodejs_eventloop_lag_seconds gauge
+nodejs_eventloop_lag_seconds{app_name="test-app"} 0.00031344 1542837854490
+
+# HELP nodejs_active_handles_total Number of active handles.
+# TYPE nodejs_active_handles_total gauge
+nodejs_active_handles_total{app_name="test-app"} 7 1542837854489
+
+# HELP nodejs_active_requests_total Number of active requests.
+# TYPE nodejs_active_requests_total gauge
+nodejs_active_requests_total{app_name="test-app"} 0 1542837854489
+
+# HELP nodejs_heap_size_total_bytes Process heap size from node.js in bytes.
+# TYPE nodejs_heap_size_total_bytes gauge
+nodejs_heap_size_total_bytes{app_name="test-app"} 30203904 1542837854490
+
+# HELP nodejs_heap_size_used_bytes Process heap size used from node.js in bytes.
+# TYPE nodejs_heap_size_used_bytes gauge
+nodejs_heap_size_used_bytes{app_name="test-app"} 23785160 1542837854490
+
+# HELP nodejs_external_memory_bytes Nodejs external memory size in bytes.
+# TYPE nodejs_external_memory_bytes gauge
+nodejs_external_memory_bytes{app_name="test-app"} 93969 1542837854490
+
+# HELP nodejs_heap_space_size_total_bytes Process heap space size total from node.js in bytes.
+# TYPE nodejs_heap_space_size_total_bytes gauge
+nodejs_heap_space_size_total_bytes{space="read_only",app_name="test-app"} 524288 1542837854490
+nodejs_heap_space_size_total_bytes{space="new",app_name="test-app"} 1048576 1542837854490
+nodejs_heap_space_size_total_bytes{space="old",app_name="test-app"} 21696512 1542837854490
+nodejs_heap_space_size_total_bytes{space="code",app_name="test-app"} 1572864 1542837854490
+nodejs_heap_space_size_total_bytes{space="map",app_name="test-app"} 1585152 1542837854490
+nodejs_heap_space_size_total_bytes{space="large_object",app_name="test-app"} 3776512 1542837854490
+nodejs_heap_space_size_total_bytes{space="new_large_object",app_name="test-app"} 0 1542837854490
+
+# HELP nodejs_heap_space_size_used_bytes Process heap space size used from node.js in bytes.
+# TYPE nodejs_heap_space_size_used_bytes gauge
+nodejs_heap_space_size_used_bytes{space="read_only",app_name="test-app"} 33520 1542837854490
+nodejs_heap_space_size_used_bytes{space="new",app_name="test-app"} 231568 1542837854490
+nodejs_heap_space_size_used_bytes{space="old",app_name="test-app"} 19405856 1542837854490
+nodejs_heap_space_size_used_bytes{space="code",app_name="test-app"} 760736 1542837854490
+nodejs_heap_space_size_used_bytes{space="map",app_name="test-app"} 934960 1542837854490
+nodejs_heap_space_size_used_bytes{space="large_object",app_name="test-app"} 2420608 1542837854490
+nodejs_heap_space_size_used_bytes{space="new_large_object",app_name="test-app"} 0 1542837854490
+
+# HELP nodejs_heap_space_size_available_bytes Process heap space size available from node.js in bytes.
+# TYPE nodejs_heap_space_size_available_bytes gauge
+nodejs_heap_space_size_available_bytes{space="read_only",app_name="test-app"} 482064 1542837854490
+nodejs_heap_space_size_available_bytes{space="new",app_name="test-app"} 799600 1542837854490
+nodejs_heap_space_size_available_bytes{space="old",app_name="test-app"} 1916552 1542837854490
+nodejs_heap_space_size_available_bytes{space="code",app_name="test-app"} 491168 1542837854490
+nodejs_heap_space_size_available_bytes{space="map",app_name="test-app"} 615296 1542837854490
+nodejs_heap_space_size_available_bytes{space="large_object",app_name="test-app"} 1496514048 1542837854490
+nodejs_heap_space_size_available_bytes{space="new_large_object",app_name="test-app"} 0 1542837854490
+
+# HELP nodejs_version_info Node.js version info.
+# TYPE nodejs_version_info gauge
+nodejs_version_info{version="v11.2.0",major="11",minor="2",patch="0",app_name="test-app"} 1

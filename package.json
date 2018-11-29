@@ -1,0 +1,60 @@
+{
+  "name": "@tailorbrands/node-exporter-prometheus",
+  "repository": "github:tailorbrands/node-exporter-prometheus",
+  "version": "1.0.0",
+  "description": "Exposes prometheus metrics",
+  "main": "index.js",
+  "author": "Tailor Brands",
+  "contributors": [
+  	"Lior Rozen <liorr@tailorbrands.com>"
+  ],
+  "dependencies": {
+    "prom-client": "11.2.0"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "express": "^4.16.3",
+    "supertest": "^3.1.0",
+    "xo": "^0.23.0"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/xo --fix",
+    "test": "./node_modules/.bin/jest --runInBand",
+    "tdd": "./node_modules/.bin/jest --watchAll",
+    "debug": "node --inspect-brk ./node_modules/.bin/jest --runInBand"
+  },
+  "jest": {
+    "coverageDirectory": "coverage",
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "lcov",
+      "html",
+      "text"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "coveragePathIgnorePatterns": [
+      "/test/",
+      "/coverage/"
+    ]
+  },
+  "xo": {
+    "ignores": [
+      "coverage/**"
+    ],
+    "global": [
+      "describe",
+      "it",
+      "expect",
+      "beforeEach",
+      "afterEach"
+    ]
+  }
+}
