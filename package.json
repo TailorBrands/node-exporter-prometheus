@@ -1,11 +1,12 @@
 {
   "name": "@tailorbrands/node-exporter-prometheus",
   "repository": "github:tailorbrands/node-exporter-prometheus",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Exposes prometheus metrics",
   "main": "index.js",
   "author": "Tailor Brands",
   "keywords": ["node", "prometheus"],
+  "license": "MIT",
   "contributors": [
   	"Lior Rozen <liorr@tailorbrands.com>"
   ],
