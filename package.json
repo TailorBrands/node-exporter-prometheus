@@ -5,6 +5,7 @@
   "description": "Exposes prometheus metrics",
   "main": "index.js",
   "author": "Tailor Brands",
+  "keywords": ["node", "prometheus"],
   "contributors": [
   	"Lior Rozen <liorr@tailorbrands.com>"
   ],

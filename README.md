@@ -10,7 +10,7 @@ as well as request duration, paths, methods, and statuses. [Example output](./ex
 ### Installing
 
 ```js
-npm install node-prometheus-exporter
+npm install @tailorbrands/node-exporter-prometheus
 ```
 
 ### Setup
@@ -21,7 +21,8 @@ Since the duration of requests is being measured, it is important that the expor
 app = express();
 // Node prometheus exporter setup
 const options = {appName}; // `appName` is the name of your service/application
-const {promMiddleware, promMetrics, promClient} = require('node-prometheus-exporter')(options);
+const prometheusExporter = require('@tailorbrands/node-exporter-prometheus')
+const {promMiddleware, promMetrics, promClient} = prometheusExporter(options);
 app.use(promMiddleware);
 app.get('/metrics', promMetrics);
 // Application routes and middleware starts here
