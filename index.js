@@ -28,7 +28,7 @@ module.exports = ({appName = DEFAULT_APP_NAME, ignoredRoutes = DEFAULT_IGNORED_R
 	const middlewareFunc = (req, res, next) => {
 		if (!ignoredRoutes.includes(req.path)) {
 			const end = durrationSummary.startTimer();
-			req.on('end', () => {
+			res.on('finish', () => {
 				const reqData = {method: req.method, path: req.path, status: res.statusCode};
 				statusCounter.inc(reqData, 1); // Observes the status code of the request
 				end({path: req.path}); // Observes the duration of the request
