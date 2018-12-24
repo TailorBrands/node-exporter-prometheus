@@ -4,8 +4,9 @@
 
 # Prometheus Exporter for Express Applications
 
-This module allows application to expose Prometheus compatible metrics. The metrics include those that are exported by default in [`prom-client`](https://github.com/siimon/prom-client)
-as well as request duration, paths, methods, and statuses. [Example output](./examples/output.txt). By default, the `/metrics` and `/healthz` endpoints are ignored.
+This module allows application to expose Prometheus compatible metrics. The metrics include request duration and statuses and optionally those that are
+exported by default in [`prom-client`](https://github.com/siimon/prom-client). [Example output showing all metrics](./examples/output.txt).
+By default, the `/metrics` and `/healthz` endpoints are ignored.
 
 ### Installing
 
