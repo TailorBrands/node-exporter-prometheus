@@ -9,9 +9,8 @@ node_http_duration_seconds_count{appName="test-app"} 2
 
 # HELP node_http_requests_total Response status codes
 # TYPE node_http_requests_total counter
-node_http_requests_total{method="GET",path="/home",status="200",appName="test-app"} 1
-node_http_requests_total{method="GET",path="/non_existant_route",status="404",appName="test-app"} 1
-node_http_requests_total{method="GET",path="/favicon.ico",status="404",appName="test-app"} 1
+node_http_requests_total{status="200",appName="test-app"} 1
+node_http_requests_total{status="404",appName="test-app"} 1
 
 # HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
 # TYPE process_cpu_user_seconds_total counter
