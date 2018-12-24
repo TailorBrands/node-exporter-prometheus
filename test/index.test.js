@@ -12,7 +12,7 @@ describe('Adds duration and status metrics', () => {
 
 	beforeEach(async () => {
 		this.app = express();
-		const {server, client} = await _createServer(this.app, {});
+		const {server, client} = await _createServer(this.app);
 		this.server = server;
 		this.prometheusClient = this.prometheusClient || client;
 	});
@@ -27,14 +27,15 @@ describe('Adds duration and status metrics', () => {
 		}
 	});
 
-	it('Measures request durration', async () => {
+	it('Measures request duration', async () => {
 		const metricPrefix = 'node_http_duration_seconds';
 
 		let res = await request(this.app).get('/metrics');
 		let metrics = _filterMetrics(res.text, metricPrefix);
-		// Since no actual requests have been made we don't expect any metrics
-		// to be available (/metrics is ignored as a route)
-		expect(metrics).toHaveLength(0);
+		// Since no actual requests have been made we don't expect any values to be available
+        metrics.forEach(metric => {
+            expect(metric.endsWith('0'));
+        });
 
 		// This request should be measured
 		res = await request(this.app).get('/non_existent_route');
@@ -57,28 +58,26 @@ describe('Adds duration and status metrics', () => {
 		// Ensure no existing metrics exist
 		let res = await request(this.app).get('/metrics');
 		let metrics = _filterMetrics(res.text, metricPrefix);
-		// Since no actual requests have been made we don't expect any metrics
-		// to be available (/metrics is ignored as a route)
-		expect(metrics).toHaveLength(0);
+		// Since no actual requests have been made we don't expect any values to be available
+        metrics.forEach(metric => {
+            expect(metric.endsWith('0'));
+        });
 
 		// Generate metrics by making requests to both valid and invalid routes
 		res = await request(this.app).get('/fake_route'); // Yield 404
 		res = await request(this.app).get('/some_route'); // Yield 200
 
-		// Refetch the metrics and ensure that both requests were monitored
+		// Re-fetch the metrics and ensure that both requests were monitored
 		res = await request(this.app).get('/metrics');
-		metrics = _filterMetrics(res.text, metricPrefix);
-		expect(metrics).toHaveLength(2);
+		metric = _filterMetrics(res.text, metricPrefix).pop();
+        expect(metric.endsWith('2'));
 	});
 });
 
-describe('Supports not collecting default metrics', () => {
+describe('Supports optional collecting of default metrics', () => {
 	this.app = null;
 	this.server = null;
 	this.prometheusClient = null;
-
-	beforeEach(async () => {
-	});
 
 	afterEach(done => {
 		this.app = null;
@@ -90,36 +89,40 @@ describe('Supports not collecting default metrics', () => {
 		}
 	});
 
-	it('Collects default metrics by default', async () => {
+	it('Collects default metrics', async () => {
 
 		this.app = express();
 		const {server, client} = await _createServer(this.app, {
-            appName: TEST_APP_NAME, ignoredRoutes: IGNORED_ROUTES
+            appName: TEST_APP_NAME, collectDefaultMetrics: true
         });
 		this.server = server;
 		this.prometheusClient = this.prometheusClient || client;
 
 		let res = await request(this.app).get('/metrics');
-		let metrics = _filterMetrics(res.text, 'nodejs_version_info');
 
-		expect(metrics.length).toBe(1)
+        // nodejs_version_info is one of the default metrics
+		let metric = _filterMetrics(res.text, 'nodejs_version_info').pop();
+		expect(metric.endsWith('1'));
 	});
 
-	it('Does not collect default metrics', async () => {
+	it('Does not collect default metrics by default', async () => {
 
 		this.app = express();
-		const {server, client} = await _createServer(this.app, {
-            appName: TEST_APP_NAME, ignoredRoutes: IGNORED_ROUTES, collectDefaultMetrics: false
-        });
+		const {server, client} = await _createServer(this.app, { appName: TEST_APP_NAME });
 		this.server = server;
 		this.prometheusClient = this.prometheusClient || client;
 
 		let res = await request(this.app).get('/metrics');
-		let metrics = res.text.split('\n').filter(Boolean);
+		let metrics = _filterMetrics(res.text, 'node');
 
-        // We are only expecting the two additional metrics to be returned.
-        // Each metric contains an additional help message so two lines for each.
-		expect(metrics.length).toBe(4);
+        // nodejs_version_info is one of the default metrics
+		let metric = _filterMetrics(res.text, 'nodejs_version_info').pop();
+
+		// Default metrics start with either 'process' or 'nodejs'
+        metrics.forEach(metric => {
+            expect(metric.startsWith('process')).toBeFalsy();
+            expect(metric.startsWith('nodejs')).toBeFalsy();
+        });
 	});
 });
 
@@ -153,15 +156,16 @@ describe('Supports ignored routes', () => {
 		// Ensure no existing metrics exist
 		let res = await request(this.app).get('/metrics');
 		let metrics = _filterMetrics(res.text, metricPrefix);
-		// Since no actual requests have been made we don't expect any metrics
-		// to be available (/metrics is ignored as a route)
-		expect(metrics).toHaveLength(0);
+		// Since no actual requests have been made we don't expect any values to be available
+        metrics.forEach(metric => {
+            expect(metric.endsWith('0'));
+        });
 
 		// Generate metrics by making requests to both monitored and ignored routes
 		res = await request(this.app).get('/ignore'); // Should NOT be calculated
 		res = await request(this.app).get('/calculate'); // Should be calculated
 
-		// Refetch the metrics and ensure that both requests were monitored
+		// Re-fetch the metrics and ensure that both requests were monitored
 		res = await request(this.app).get('/metrics');
 		metrics = _filterMetrics(res.text, metricPrefix);
 		expect(metrics).toHaveLength(1);
@@ -179,7 +183,7 @@ function _filterMetrics(metrics, filterText) {
 		});
 }
 
-function _createServer(app, options) {
+function _createServer(app, options = {}) {
 	const {middleware, metrics, client} = require('../index.js')(options);
 	app.use(middleware);
 	app.get('/metrics', metrics);
