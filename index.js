@@ -11,18 +11,22 @@ const DEFAULT_APP_NAME = 'node';
  *    ignoredRoutes (optional)    - An array of routes that should be ignored
  * @returns {object} The internal prometheus client, middleware function, and metrics function.
  */
-module.exports = ({appName = DEFAULT_APP_NAME, ignoredRoutes = DEFAULT_IGNORED_ROUTES}) => {
+module.exports = ({appName = DEFAULT_APP_NAME, ignoredRoutes = DEFAULT_IGNORED_ROUTES, collectDefaultMetrics = true}) => {
 	Prometheus.register.setDefaultLabels({appName});
-	Prometheus.collectDefaultMetrics({timeout: DEFAULT_TIMEOUT_MS});
 
 	const durrationSummary = createDurrationSummary();
 	const statusCounter = createStatusCounter();
+    let defaultMetricsInterval = null;
+
+    if (collectDefaultMetrics) {
+        defaultMetricsInterval = Prometheus.collectDefaultMetrics({timeout: DEFAULT_TIMEOUT_MS});
+    }
 
 	/**
    * This is the middleware function that actually measures response metrics. For every request the
    * durration is measured as well as the request path, request method, and response status.
    * @param {Request} req A request object
-   * @param {Response} res A responsee object
+   * @param {Response} res A response object
    * @param {Function} next Function to triggre the next middleware function in the chain
    */
 	const middlewareFunc = (req, res, next) => {
