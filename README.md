@@ -22,9 +22,9 @@ app = express();
 // Node prometheus exporter setup
 const options = {appName}; // `appName` is the name of your service/application
 const prometheusExporter = require('@tailorbrands/node-exporter-prometheus')
-const {promMiddleware, promMetrics, promClient} = prometheusExporter(options);
-app.use(promMiddleware);
-app.get('/metrics', promMetrics);
+const promExporter = PromExporter(options);
+app.use(promExporter.middleware);
+app.get('/metrics', promExporter.metrics);
 // Application routes and middleware starts here
 app.use(...)
 app.get(...)
@@ -33,8 +33,9 @@ app.post(...)
 
 ### Options
 
-- `appName`                     - Name that will be used in the label for every metric
-- `ignoredRoutes` (optional)    - An array of routes to be exuded when calculating metrics. Default value: `['/metrics', '/healthz']`
+- `appName`                             - Name that will be used in the label for every metric
+- `ignoredRoutes` (optional)            - An array of routes to be exuded when calculating metrics. Default value: `['/metrics', '/healthz']`
+- `collectDefaultMetrics` (optional)    - A boolean indicating whether or not to collect [default nodejs metrics](https://github.com/siimon/prom-client/#default-metrics) (default: true)
 
 ## Additional Metrics
 
