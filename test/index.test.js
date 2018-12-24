@@ -12,7 +12,7 @@ describe('Adds duration and status metrics', () => {
 
 	beforeEach(async () => {
 		this.app = express();
-		const {server, client} = await _createServer(this.app);
+		const {server, client} = await _createServer(this.app, {});
 		this.server = server;
 		this.prometheusClient = this.prometheusClient || client;
 	});
@@ -72,6 +72,57 @@ describe('Adds duration and status metrics', () => {
 	});
 });
 
+describe('Supports not collecting default metrics', () => {
+	this.app = null;
+	this.server = null;
+	this.prometheusClient = null;
+
+	beforeEach(async () => {
+	});
+
+	afterEach(done => {
+		this.app = null;
+		this.prometheusClient.register.clear();
+		if (this.server) {
+			this.server.close(done);
+		} else {
+			done();
+		}
+	});
+
+	it('Collects default metrics by default', async () => {
+
+		this.app = express();
+		const {server, client} = await _createServer(this.app, {
+            appName: TEST_APP_NAME, ignoredRoutes: IGNORED_ROUTES
+        });
+		this.server = server;
+		this.prometheusClient = this.prometheusClient || client;
+
+		let res = await request(this.app).get('/metrics');
+		let metrics = _filterMetrics(res.text, 'nodejs_version_info');
+
+		expect(metrics.length).toBe(1)
+	});
+
+	it('Does not collect default metrics', async () => {
+
+		this.app = express();
+		const {server, client} = await _createServer(this.app, {
+            appName: TEST_APP_NAME, ignoredRoutes: IGNORED_ROUTES, collectDefaultMetrics: false
+        });
+		this.server = server;
+		this.prometheusClient = this.prometheusClient || client;
+
+		let res = await request(this.app).get('/metrics');
+		let metrics = res.text.split('\n').filter(Boolean);
+
+        // We are only expecting the two additional metrics to be returned.
+        // Each metric contains an additional help message so two lines for each.
+		expect(metrics.length).toBe(4);
+	});
+});
+
 describe('Supports ignored routes', () => {
 	this.app = null;
 	this.server = null;
@@ -79,7 +130,9 @@ describe('Supports ignored routes', () => {
 
 	beforeEach(async () => {
 		this.app = express();
-		const {server, client} = await _createServer(this.app, TEST_APP_NAME, IGNORED_ROUTES);
+		const {server, client} = await _createServer(this.app, {
+            appName: TEST_APP_NAME, ignoredRoutes: IGNORED_ROUTES
+        });
 		this.server = server;
 		this.prometheusClient = this.prometheusClient || client;
 	});
@@ -94,7 +147,7 @@ describe('Supports ignored routes', () => {
 		}
 	});
 
-	it('Supports ignoring specified routes ', async () => {
+	it('Supports ignoring specified routes', async () => {
 		const metricPrefix = 'node_http_requests_total';
 
 		// Ensure no existing metrics exist
@@ -126,11 +179,8 @@ function _filterMetrics(metrics, filterText) {
 		});
 }
 
-function _createServer(app, appName = undefined, ignoredRoutes = undefined) {
-	const {middleware, metrics, client} = require('../index.js')({
-		appName,
-		ignoredRoutes
-	});
+function _createServer(app, options) {
+	const {middleware, metrics, client} = require('../index.js')(options);
 	app.use(middleware);
 	app.get('/metrics', metrics);
 	app.use((req, reply) => reply.status(404).end());
