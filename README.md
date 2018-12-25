@@ -36,7 +36,7 @@ app.post(...)
 
 - `appName`                             - Name that will be used in the label for every metric
 - `ignoredRoutes` (optional)            - An array of routes to be exuded when calculating metrics. Default value: `['/metrics', '/healthz']`
-- `collectDefaultMetrics` (optional)    - A boolean indicating whether or not to collect [default nodejs metrics](https://github.com/siimon/prom-client/#default-metrics) (default: true)
+- `collectDefaultMetrics` (optional)    - A boolean indicating whether or not to collect [default nodejs metrics](https://github.com/siimon/prom-client/#default-metrics) (default: false)
 
 ## Additional Metrics
 
