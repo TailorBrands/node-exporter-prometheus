@@ -14,7 +14,7 @@
     "Lior Rozen <liorr@tailorbrands.com>"
   ],
   "dependencies": {
-    "prom-client": "11.2.0"
+    "prom-client": "11.2.1"
   },
   "devDependencies": {
     "jest": "23.6.0",
