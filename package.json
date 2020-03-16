@@ -17,10 +17,10 @@
     "prom-client": "11.2.0"
   },
   "devDependencies": {
-    "jest": "24.8.0",
+    "jest": "24.9.0",
     "express": "4.16.3",
     "supertest": "3.1.0",
-    "xo": "0.24.0"
+    "xo": "0.28.0"
   },
   "scripts": {
     "lint": "./node_modules/.bin/xo --fix",
