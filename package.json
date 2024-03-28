@@ -17,7 +17,7 @@
     "prom-client": "11.2.0"
   },
   "devDependencies": {
-    "express": "4.17.3",
+    "express": "4.19.2",
     "jest": "^27.3.1",
     "minimist": ">=1.2.2",
     "supertest": "3.1.0",
