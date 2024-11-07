@@ -13,22 +13,22 @@ jobs:
     name: licensing_node
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - run: npm ci
-      - name: Run setup-licensed
-        uses: jonabc/setup-licensed@v1
-        with:
-          version: "3.x"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: licensed cache
-      - uses: jonabc/licensed-ci@v1
-        with:
-          workflow: branch
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+    - uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm ci
+    - name: Run setup-licensed
+      uses: github/setup-licensed@v1
+      with:
+        version: "3.x"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - run: licensed cache
+    - uses: github/licensed-ci@v1
+      with:
+        workflow: branch
+        github_token: ${{ secrets.GITHUB_TOKEN }}
